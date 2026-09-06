@@ -1,0 +1,12 @@
+<article class="project-card{% if project.featured %} project-featured{% endif %} reveal" data-category="{{ project.category|slugify }}">
+  <div class="project-meta">
+    <span>{{ forloop.counter|stringformat:'02d' }} / Project</span>
+    <span>{{ project.category }}</span>
+  </div>
+  <h3>{{ project.title }}</h3>
+  <div class="case-study">
+    <p><b>Summary</b> {{ project.description }}</p>
+    <p><b>Stack</b> {{ project.tech_stack|join:', ' }}</p>
+  </div>
+  {% if project.project_url %}<a class="project-link" href="{{ project.project_url }}" target="_blank" rel="noreferrer">View project <span aria-hidden="true">&#8599;</span></a>{% else %}<a href="#contact" class="project-link" data-project="{{ project.title }}" aria-label="Discuss {{ project.title }}">Discuss this project <span aria-hidden="true">&#8599;</span></a>{% endif %}
+</article>

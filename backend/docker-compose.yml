@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: rainhard-portfolio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rainhard_portfolio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - portfolio-postgres:/var/lib/postgresql/data
+
+volumes:
+  portfolio-postgres:

@@ -1,0 +1,31 @@
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const pinoHttp = require('pino-http');
+const config = require('./config');
+const { notFound, errorHandler } = require('./middleware');
+const auth = require('./routes/auth');
+const messages = require('./routes/messages');
+const projects = require('./routes/projects');
+const blog = require('./routes/blog');
+const skills = require('./routes/skills');
+const analytics = require('./routes/analytics');
+
+const app = express();
+app.set('trust proxy', 1);
+app.use(helmet());
+app.use(cors({ origin: config.corsOrigin === '*' ? true : config.corsOrigin }));
+app.use(express.json({ limit: '100kb' }));
+app.use(pinoHttp());
+app.get('/health', (req, res) => res.json({ data: { status: 'ok', service: 'portfolio-api' } }));
+app.use('/api/auth', auth);
+app.use('/api/messages', messages);
+app.use('/api/projects', projects);
+app.use('/api/blog', blog);
+app.use('/api/skills', skills);
+app.use('/api/analytics', analytics);
+app.use(notFound);
+app.use(errorHandler);
+
+BigInt.prototype.toJSON = function toJSON() { return this.toString(); };
+module.exports = app;

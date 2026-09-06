@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="page-loader" aria-hidden="true"><span>RBA</span></div>
+  <header class="site-header" id="top" tabindex="-1">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Rainhard Boah Asante home"><span class="brand-mark"><img src="{% static 'site/Images/Asante.jpeg' %}" alt=""></span><span>Rainhard<br><em>Boah Asante</em></span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu"><span></span><span></span><span></span><b class="sr-only">Open navigation</b></button>
+      <div class="nav-menu" id="site-menu">
+        <a href="#about">About</a><a href="#skills">Capabilities</a><a href="#work">Work</a><a href="#contact">Contact</a>
+        <a class="nav-cta" href="#contact">Let's talk <span aria-hidden="true">&#8594;</span></a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Toggle theme"><span class="theme-icon">&#9789;</span></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="status-dot"></span> Available for IT opportunities <span class="eyebrow-place">/ Kumasi, GH</span></p>
+        <h1 id="hero-title">Reliable systems.<br><span>Clearer outcomes.</span></h1>
+        <p class="hero-lede">I keep people productive and infrastructure dependable through thoughtful support, practical networking, and security-minded administration.</p>
+        <div class="hero-actions"><a class="button button-dark" href="#contact">Contact me <span aria-hidden="true">&#8599;</span></a><a class="text-link" href="{% static 'site/cv.pdf' %}" download="Rainhard-Boah-Asante-CV.pdf">Download CV <span aria-hidden="true">&#8595;</span></a></div>
+        <div class="hero-proof"><span>01</span><p>Information Technology<br><strong>UENR / 2022 - Present</strong></p><span class="rule"></span><p>IT Intern<br><strong>KMA / Q4 2025</strong></p></div>
+      </div>
+      <div class="hero-visual reveal reveal-delay" aria-label="Network systems status dashboard">
+        <div class="visual-top"><span class="mono-label">FIELD NOTE / 001</span><span class="visual-index">01<span>/04</span></span></div>
+        <div class="field-summary"><span class="field-avatar">RB</span><div><strong>Rainhard Boah Asante</strong><small>IT SUPPORT / NETWORKS / SECURITY</small></div><span class="field-live"><i></i> ONLINE</span></div>
+        <div class="network-map">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <span class="node node-core">RB</span><span class="node node-a">LAN</span><span class="node node-b">SYS</span><span class="node node-c">SEC</span>
+          <span class="line line-a"></span><span class="line line-b"></span><span class="line line-c"></span>
+        </div>
+        <div class="visual-note"><span class="note-number">A</span><p>Observe the signal.<br><strong>Then solve the right problem.</strong></p></div>
+        <div class="field-metrics"><div><span>RESPONSE</span><strong>FIRST-LINE</strong></div><div><span>FOCUS</span><strong>RELIABILITY</strong></div><div><span>BASE</span><strong>KUMASI, GH</strong></div></div>
+        <div class="visual-footer"><span>NETWORK / SYSTEMS / SECURITY</span><span>06.25.2026</span></div>
+      </div>
+    </section>
+
+    <section class="marquee-band" aria-label="Areas of practice"><div class="marquee-track"><span>IT SUPPORT</span><i>&#9670;</i><span>NETWORKING</span><i>&#9670;</i><span>SYSTEMS ADMIN</span><i>&#9670;</i><span>CYBERSECURITY</span><i>&#9670;</i><span>IT SUPPORT</span><i>&#9670;</i><span>NETWORKING</span></div></section>
+
+    <section class="section about-section container" id="about" aria-labelledby="about-title">
+      <div class="section-label reveal"><span>01</span><span>Profile</span></div>
+      <div class="about-content"><div class="reveal"><p class="kicker">A practical mind for complex systems</p><h2 id="about-title">I make technology<br><em>easier to rely on.</em></h2></div><div class="about-text reveal reveal-delay"><p>I am a fresh BSc Information Technology graduate from the University of Energy and Natural Resources, building a career across IT support, networking, systems administration, and cybersecurity.</p><p>My approach is hands-on and methodical: understand the person, trace the system, document the fix, and leave the environment stronger than I found it.</p><a class="arrow-link" href="#contact">Start a conversation <span>&#8594;</span></a></div></div>
+    </section>
+
+    <section class="section capability-section" id="skills" aria-labelledby="skills-title">
+      <div class="container"><div class="section-label reveal"><span>02</span><span>Capabilities</span></div><div class="section-heading reveal"><p class="kicker">Built from fundamentals</p><h2 id="skills-title">The useful stuff,<br><em>properly understood.</em></h2></div>
+        <div class="skills-grid">
+          {% for skill in skills %}
+            {% include "portfolio/skill_item.html" %}
+          {% empty %}
+            <p>No capabilities are available yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="section experience-section container" id="experience" aria-labelledby="experience-title"><div class="section-label reveal"><span>03</span><span>Experience</span></div><div class="experience-layout"><div class="reveal"><p class="kicker">Where theory met real users</p><h2 id="experience-title">Small fixes.<br><em>Meaningful impact.</em></h2></div><div class="timeline reveal reveal-delay"><article class="timeline-item"><div class="timeline-date">Oct 2025<br>Dec 2025</div><div class="timeline-marker"></div><div class="timeline-body"><p class="mono-label">IT INTERN / KMA</p><h3>Kumasi Metropolitan Assembly</h3><p>Supported staff with first-line IT issues, monitored and troubleshot network problems, managed user accounts, and kept IT equipment records accurate.</p><div class="tag-row"><span>Support</span><span>Networks</span><span>Documentation</span></div></div></article></div></div></section>
+
+    <section class="section projects-section" id="work" aria-labelledby="work-title"><div class="container"><div class="section-label reveal"><span>04</span><span>Selected work</span></div><div class="projects-head reveal"><div><p class="kicker">Learning by building</p><h2 id="work-title">Projects with a<br><em>point of view.</em></h2></div><div class="filter-tabs" role="group" aria-label="Filter projects"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="machine-learning">Machine learning</button><button class="filter" data-filter="security">Security</button><button class="filter" data-filter="cloud">Cloud</button></div></div>
+      <div class="project-grid">
+        {% for project in projects %}
+          {% include "portfolio/project_list.html" with project=project %}
+        {% empty %}
+          <p>No projects are available yet.</p>
+        {% endfor %}
+        {% comment %}
+        The original static project cards remain below as a design reference during migration.
+        <article class="project-card reveal reveal-delay" data-category="security"><div class="project-meta"><span>02 / Utility</span><span>Security</span></div><h3>Password Strength Checker</h3><div class="case-study"><p><b>Problem</b> Many password tools only say “weak” without explaining what to fix.</p><p><b>Approach</b> Combined length, character variety, repeated patterns and common-password checks into one readable score.</p><p><b>Outcome</b> Users get useful feedback immediately, without sending the password anywhere.</p></div><a href="#contact" class="project-link" data-project="Password Strength Checker" aria-label="Discuss the password strength checker">Discuss this project <span>&#8599;</span></a></article>
+        <article class="project-card reveal" data-category="security"><div class="project-meta"><span>03 / Analysis</span><span>Security</span></div><h3>Phishing Email Analyzer</h3><div class="case-study"><p><b>Problem</b> A convincing email can hide its warning signs in plain sight.</p><p><b>Approach</b> Reviewed sender details, link destinations, urgent wording, requests for credentials and mismatched domains.</p><p><b>Outcome</b> A simple first-pass checklist that helps a user pause before opening or replying.</p></div><a href="#contact" class="project-link" data-project="Phishing Email Analyzer" aria-label="Discuss the phishing email analyzer">Discuss this project <span>&#8599;</span></a></article>
+        <article class="project-card reveal" data-category="cloud"><div class="project-meta"><span>04 / Lab</span><span>Cloud</span></div><h3>AWS EC2 Personal Cloud Security Lab</h3><div class="case-study"><p><b>Problem</b> A working cloud server is not automatically a secure one.</p><p><b>Approach</b> Built an EC2 instance, limited security-group access, separated administration from public traffic and reviewed the exposed surface.</p><p><b>Outcome</b> A small repeatable lab for practising least-privilege decisions before applying them to larger environments.</p></div><a href="#contact" class="project-link" data-project="AWS EC2 Personal Cloud Security Lab" aria-label="Discuss the AWS cloud security lab">Discuss this project <span>&#8599;</span></a></article>
+        {% endcomment %}
+      </div></div></section>
+
+    <section class="stats-band" aria-label="Portfolio statistics"><div class="container stats-grid"><div><strong data-count="1">0</strong><span>Internship<br>completed</span></div><div><strong data-count="4">0</strong><span>Technical<br>projects</span></div><div><strong data-count="5">0</strong><span>Core areas<br>of practice</span></div><div><strong data-count="100">0</strong><span>Curiosity<br>in percent</span></div></div></section>
+
+    <section class="section education-section container" id="education" aria-labelledby="education-title"><div class="section-label reveal"><span>05</span><span>Education</span></div><div class="education-layout"><div class="reveal"><p class="kicker">The foundation</p><h2 id="education-title">Learning that<br><em>keeps moving.</em></h2></div><div class="education-list reveal reveal-delay"><div class="education-item"><span>2022 - Present</span><div><h3>BSc Information Technology</h3><p>University of Energy and Natural Resources</p></div></div><div class="education-item"><span>Education</span><div><h3>Senior High School</h3><p>Barekese Senior High School</p></div></div></div></div></section>
+
+    <section class="contact-section" id="contact" aria-labelledby="contact-title"><div class="container contact-layout"><div class="contact-intro reveal"><p class="eyebrow"><span class="status-dot"></span> Open to the next challenge</p><h2 id="contact-title">Let's make<br><em>things work.</em></h2><p>Have a support challenge, a network to untangle, or an opportunity worth discussing? Send a note.</p><div class="contact-details"><a href="mailto:asanteboahrainhard8@gmail.com">asanteboahrainhard8@gmail.com</a><a href="tel:+233205378613">020 537 8613</a></div><div class="contact-socials" aria-label="Social media profiles"><a href="https://www.instagram.com/aburokyire_07" target="_blank" rel="noreferrer">Instagram <span>&#8599;</span></a><a class="social-with-image" href="https://github.com/RAINHARD07" target="_blank" rel="noreferrer"><img src="{% static 'portfolio/images/github.svg' %}" alt=""> GitHub <span>&#8599;</span></a><a class="social-with-image" href="https://www.linkedin.com/in/asante-boah-rainhard-285303392/" target="_blank" rel="noreferrer"><img src="{% static 'portfolio/images/linkedin.svg' %}" alt=""> LinkedIn <span>&#8599;</span></a><a class="social-with-image" href="https://x.com/boah_asante" target="_blank" rel="noreferrer"><img src="{% static 'portfolio/images/x.svg' %}" alt=""> X / Twitter <span>&#8599;</span></a><a class="social-with-image" href="https://www.facebook.com/rainhard.asante.boah" target="_blank" rel="noreferrer"><img src="{% static 'portfolio/images/facebook.svg' %}" alt=""> Facebook <span>&#8599;</span></a></div></div><form class="contact-form reveal reveal-delay" id="contact-form" novalidate><div class="form-row"><label for="name">Your name<input id="name" name="name" type="text" autocomplete="name" required></label><label for="email">Email address<input id="email" name="email" type="email" autocomplete="email" required></label></div><label for="message">What can I help with?<textarea id="message" name="message" rows="5" required></textarea></label><button class="button button-light" type="submit">Send message <span aria-hidden="true">&#8599;</span></button><p class="form-status" role="status" aria-live="polite"></p></form></div></section>
+  </main>
+  <footer class="site-footer"><div class="container footer-main"><a class="brand" href="#top"><span class="brand-mark"><img src="{% static 'site/Images/Asante.jpeg' %}" alt=""></span><span>Rainhard<br><em>Boah Asante</em></span></a><div class="footer-links"><a href="#about">About</a><a href="#work">Projects</a><a href="#contact">Contact</a></div><div class="social-links"><a href="https://www.instagram.com/aburokyire_07" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a><a class="social-icon-image" href="https://github.com/RAINHARD07" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="{% static 'site/Images/github.svg' %}" alt=""></a><a class="social-icon-image" href="https://www.linkedin.com/in/asante-boah-rainhard-285303392/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="{% static 'site/Images/linkedin.svg' %}" alt=""></a><a class="social-icon-image" href="https://x.com/boah_asante" target="_blank" rel="noreferrer" aria-label="X"><img src="{% static 'site/Images/x.svg' %}" alt=""></a><a class="social-icon-image" href="https://www.facebook.com/rainhard.asante.boah" target="_blank" rel="noreferrer" aria-label="Facebook"><img src="{% static 'site/Images/facebook.svg' %}" alt=""></a></div></div><div class="container footer-bottom"><span>&copy; 2026 Rainhard Boah Asante</span><span>Built with intent in Kumasi, Ghana</span><a href="#top" class="back-top" aria-label="Back to top">&#8593;</a></div></footer>
+{% endblock %}

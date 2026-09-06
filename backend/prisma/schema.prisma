@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Message {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @db.VarChar(120)
+  email     String   @db.VarChar(320)
+  subject   String?  @db.VarChar(200)
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  isRead    Boolean  @default(false) @map("is_read")
+
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([isRead, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([email])
+  @@map("messages")
+}
+
+model Project {
+  id          BigInt   @id @default(autoincrement())
+  title       String   @db.VarChar(240)
+  description String   @db.Text
+  category    String   @db.VarChar(80)
+  techStack   String[] @map("tech_stack")
+  imageUrl    String?  @map("image_url") @db.VarChar(500)
+  projectUrl  String?  @map("project_url") @db.VarChar(500)
+  githubUrl   String?  @map("github_url") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+  featured    Boolean  @default(false)
+
+  @@index([category, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([featured, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("projects")
+}
+
+model BlogPost {
+  id          BigInt    @id @default(autoincrement())
+  title       String    @db.VarChar(240)
+  slug        String    @unique @db.VarChar(260)
+  content     String    @db.Text
+  excerpt     String?   @db.VarChar(500)
+  tags        String[]
+  publishedAt DateTime? @map("published_at")
+  viewsCount  BigInt    @default(0) @map("views_count")
+
+  @@index([publishedAt(sort: Desc), id(sort: Desc)])
+  @@map("blog_posts")
+}
+
+model Visit {
+  id          BigInt   @id @default(autoincrement())
+  pageVisited String   @map("page_visited") @db.VarChar(500)
+  ipHash      String   @map("ip_hash") @db.Char(64)
+  userAgent   String?  @map("user_agent") @db.VarChar(500)
+  referrer    String?  @db.VarChar(500)
+  visitedAt   DateTime @default(now()) @map("visited_at")
+
+  @@index([visitedAt])
+  @@index([visitedAt, pageVisited])
+  @@index([ipHash, visitedAt])
+  @@map("analytics_visits")
+}
+
+model Skill {
+  id               BigInt @id @default(autoincrement())
+  name             String @db.VarChar(120)
+  category         String @db.VarChar(80)
+  proficiencyLevel Int    @map("proficiency_level")
+
+  @@unique([name, category])
+  @@index([category, proficiencyLevel(sort: Desc)])
+  @@map("skills")
+}
+
+model AdminUser {
+  id           BigInt   @id @default(autoincrement())
+  email        String   @unique @db.VarChar(320)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}

@@ -1,0 +1,38 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% block meta_description %}Portfolio of Rainhard Boah Asante, an IT support, networking, systems administration and cybersecurity professional based in Kumasi, Ghana.{% endblock %}">
+  <meta name="author" content="Rainhard Boah Asante">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta property="og:title" content="{% block og_title %}Rainhard Boah Asante | IT Support & Systems{% endblock %}">
+  <meta property="og:description" content="Hands-on IT support, networking, systems administration and cybersecurity practice.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rainhard07.github.io/">
+  <meta property="og:image" content="{% static 'site/Images/Asante.jpeg' %}">
+  <meta property="og:image:alt" content="Rainhard Boah Asante">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{% static 'site/Images/Asante.jpeg' %}">
+  <link rel="icon" href="{% static 'site/Images/Asante.jpeg' %}" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'site/styles.css' %}">
+  <title>{% block title %}Rainhard Boah Asante | IT Support & Systems{% endblock %}</title>
+</head>
+<body>
+  {% csrf_token %}
+  {% block content %}{% endblock %}
+  <script>
+    fetch("{% url 'profile' %}").then(function (response) { return response.json(); }).then(function (payload) {
+      var profile = payload.data || {};
+      var links = {"instagram.com": profile.instagramUrl, "github.com": profile.githubUrl, "linkedin.com": profile.linkedinUrl, "x.com": profile.xUrl, "facebook.com": profile.facebookUrl};
+      document.querySelectorAll("a[href]").forEach(function (link) { Object.keys(links).forEach(function (domain) { if (links[domain] && link.href.indexOf(domain) !== -1) link.href = links[domain]; }); });
+      if (profile.cvUrl) document.querySelectorAll("a[download]").forEach(function (link) { link.href = profile.cvUrl; });
+    }).catch(function () {});
+  </script>
+  <script src="{% static 'site/script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.local
+.DS_Store
+npm-debug.log*
+backend/.env
+backend/node_modules/
+backend/.prisma/
+django_backend/.env
+django_backend/.venv/
+django_backend/db.sqlite3
+django_backend/demo/db.sqlite3
+*.sqlite3
+django_backend/media/
+django_backend/staticfiles/
+__pycache__/
+*.py[cod]

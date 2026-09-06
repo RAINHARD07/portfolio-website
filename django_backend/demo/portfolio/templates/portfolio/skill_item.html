@@ -1,0 +1,9 @@
+<article class="skill-item reveal">
+  <div class="skill-head">
+    <span>{{ forloop.counter|stringformat:'02d' }}</span>
+    <h3>{{ skill.name }}</h3>
+    <b>{{ skill.proficiency_level }}%</b>
+  </div>
+  <p>{{ skill.category }}</p>
+  <div class="meter"><span style="--level:{{ skill.proficiency_level }}%"></span></div>
+</article>
