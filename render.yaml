@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: asanterainhardboah
+    runtime: python
+    rootDir: django_backend
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    startCommand: gunicorn portfolio_project.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "asanterainhardboah.onrender.com"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://asanterainhardboah.onrender.com"
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "true"
+      - key: DJANGO_SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: asanterainhardboah-db
+          property: connectionString
+
+databases:
+  - name: asanterainhardboah-db
+    databaseName: portfolio
+    user: portfolio

@@ -35,6 +35,12 @@ The contact inbox supports well over 200,000 records. To load a clearly marked d
 
 For a quick SQLite-only local run, leave `DATABASE_URL` empty. Use PostgreSQL for production and large-volume workloads. Run `py manage.py collectstatic --noinput` before deployment and serve with Gunicorn behind HTTPS.
 
+## Render deployment
+
+The repository includes `render.yaml` for the full Django deployment. In Render, choose **New > Blueprint**, connect `RAINHARD07/portfolio-website`, and apply the blueprint. It creates the `asanterainhardboah` web service and a PostgreSQL database, then runs migrations and collects static files during each build.
+
+Render's free web service filesystem is temporary. The CV upload works during a running instance, but uploaded files should use persistent object storage or a paid persistent disk before production use.
+
 ## API
 
 - `GET /health`
