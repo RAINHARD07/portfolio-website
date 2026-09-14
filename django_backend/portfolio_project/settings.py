@@ -83,8 +83,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_DIRS = [
-    ("site", SITE_ROOT),
-    ("portfolio/images", SITE_ROOT / "Images"),
+    BASE_DIR / 'static',   
 ]
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
