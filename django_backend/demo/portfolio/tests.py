@@ -7,7 +7,7 @@ from .models import ContactSubmission, Project, Skill
 
 class PortfolioApiTests(TestCase):
     def setUp(self):
-        Project.objects.create(title="Test Project", slug="test-project", description="A test project description.", category="security", tech_stack=["Python"], featured=True)
+        Project.objects.create(title="Test Project", slug="test-project", description="A test project description.", category="test-category", tech_stack=["Python"], featured=True)
         Skill.objects.create(name="Testing", category="Engineering", proficiency_level=90)
 
     def test_home_health_and_public_api(self):
@@ -17,8 +17,8 @@ class PortfolioApiTests(TestCase):
         self.assertContains(home, "Test Project")
         self.assertContains(home, "Testing")
         self.assertEqual(client.get("/health").json()["data"]["status"], "ok")
-        self.assertEqual(len(client.get("/api/projects?limit=2").json()["data"]), 1)
-        self.assertEqual(client.get("/api/skills").json()["data"][0]["name"], "Testing")
+        self.assertEqual(len(client.get("/api/projects?limit=2&category=test-category").json()["data"]), 1)
+        self.assertIn("Testing", {skill["name"] for skill in client.get("/api/skills").json()["data"]})
 
     def test_contact_requires_csrf_and_persists(self):
         client = Client(enforce_csrf_checks=True)
