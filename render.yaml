@@ -3,7 +3,7 @@ services:
     name: asanterainhardboah
     runtime: python
     rootDir: django_backend
-    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py seed_portfolio && python manage.py collectstatic --noinput
     startCommand: gunicorn portfolio_project.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /health
     envVars:
