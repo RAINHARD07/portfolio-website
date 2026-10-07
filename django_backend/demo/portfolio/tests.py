@@ -1,8 +1,15 @@
 import json
+from io import StringIO
+from tempfile import TemporaryDirectory
 
-from django.test import Client, TestCase
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.management import call_command
+from django.test import Client, TestCase, override_settings
+from django.urls import reverse
+from django.utils import timezone
 
-from .models import ContactSubmission, Project, Skill
+from .models import ContactSubmission, Project, SiteProfile, Skill
 
 
 class PortfolioApiTests(TestCase):
@@ -35,3 +42,58 @@ class PortfolioApiTests(TestCase):
         response = client.post("/api/messages", data=json.dumps({"name": "A", "email": "bad", "message": "short"}), content_type="application/json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(ContactSubmission.objects.count(), 0)
+
+
+class PortfolioAdminTests(TestCase):
+    def test_seed_command_preserves_admin_edited_projects(self):
+        project = Project.objects.get(slug="password-strength-checker")
+        project.description = "Preserve this admin edit."
+        project.save(update_fields=("description",))
+
+        call_command("seed_portfolio", stdout=StringIO())
+
+        project.refresh_from_db()
+        self.assertEqual(project.description, "Preserve this admin edit.")
+
+    def test_contact_inbox_can_show_five_thousand_messages(self):
+        admin_user = get_user_model().objects.create_superuser(
+            username="inbox-admin",
+            email="inbox-admin@example.com",
+            password="test-only-password",
+        )
+        submitted_at = timezone.now()
+        ContactSubmission.objects.bulk_create([
+            ContactSubmission(
+                name=f"Message {index}",
+                email=f"message-{index}@example.com",
+                message_body="A saved portfolio enquiry.",
+                submitted_at=submitted_at,
+            )
+            for index in range(5000)
+        ])
+        client = Client()
+        client.force_login(admin_user)
+
+        response = client.get(reverse("admin:portfolio_contactsubmission_changelist"), {"all": "1"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["cl"].show_all)
+        self.assertEqual(response.context["cl"].result_count, 5000)
+        self.assertEqual(len(response.context["cl"].result_list), 5000)
+
+    def test_uploaded_cv_is_available_outside_debug_mode(self):
+        pdf_content = b"%PDF-1.4\nCV content\n%%EOF"
+        with TemporaryDirectory() as media_root, override_settings(MEDIA_ROOT=media_root, DEBUG=False):
+            profile = SiteProfile.objects.first() or SiteProfile.objects.create()
+            profile.cv_file.save(
+                "rainhard-cv.pdf",
+                SimpleUploadedFile("rainhard-cv.pdf", pdf_content, content_type="application/pdf"),
+                save=True,
+            )
+
+            response = Client().get(reverse("cv"))
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response["Content-Type"], "application/pdf")
+            self.assertEqual(b"".join(response.streaming_content), pdf_content)
+            self.assertEqual(Client().get(reverse("profile")).json()["data"]["cvUrl"], reverse("cv"))

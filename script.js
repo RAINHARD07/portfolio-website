@@ -21,6 +21,19 @@ async function getJson(path) {
   return response.json();
 }
 
+async function getAllProjects() {
+  const projects = [];
+  let cursor = null;
+  do {
+    const query = new URLSearchParams({ limit: '100' });
+    if (cursor) query.set('cursor', cursor);
+    const response = await getJson(`/api/projects?${query.toString()}`);
+    projects.push(...(response.data || []));
+    cursor = response.pagination?.nextCursor || null;
+  } while (cursor);
+  return projects;
+}
+
 if (themeToggle && themeIcon) {
   const savedTheme = localStorage.getItem('rainhard-theme');
   if (savedTheme === 'dark') body.dataset.theme = 'dark';
@@ -113,10 +126,10 @@ filters.forEach((filter) => {
 
 async function loadPortfolioData() {
   try {
-    const [projectResponse, skillResponse] = await Promise.all([getJson('/api/projects?limit=20'), getJson('/api/skills')]);
-    if (projectResponse.data?.length) {
+    const [projectItems, skillResponse] = await Promise.all([getAllProjects(), getJson('/api/skills')]);
+    if (projectItems.length) {
       const projectGrid = document.querySelector('.project-grid');
-      projectGrid.innerHTML = projectResponse.data.map((project, index) => `
+      projectGrid.innerHTML = projectItems.map((project, index) => `
         <article class="project-card ${project.featured ? 'project-featured' : ''} reveal ${index % 2 ? 'reveal-delay' : ''}" data-category="${escapeHtml(project.category.toLowerCase().replaceAll(' ', '-'))}">
           <div class="project-meta"><span>${String(index + 1).padStart(2, '0')} / Project</span><span>${escapeHtml(project.category)}</span></div>
           <h3>${escapeHtml(project.title)}</h3>

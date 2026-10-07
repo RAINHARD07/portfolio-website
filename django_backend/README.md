@@ -29,7 +29,11 @@ Open `http://127.0.0.1:8000/` (HTTP, not HTTPS). The Django view serves the exis
 5. Open **Contact submissions** to read messages sent from the website. Use the `is reviewed` checkbox after handling a message.
 6. Use **Projects**, **Skills**, and **Blog posts** to change the portfolio content without editing GitHub files.
 
-Uploaded CV files and future admin uploads are stored in `django_backend/media/`, separate from the source code. The root `.gitignore` excludes this folder, so `git add -A` will not push your CV or uploaded files to GitHub. Keep `media/` backed up locally, and configure persistent media storage before deploying because uploaded files are not included in a normal code deployment.
+Upload a replacement CV from **Site profiles** in Django admin. The CV is served from the Django app so it works in production as well as locally. Render mounts a persistent disk at `/var/data` for uploads; without that disk, uploaded files would be lost on redeploy. Keep database and uploaded-file backups enabled.
+
+Contact submissions are stored in the database and remain available in **Contact submissions**. The inbox shows 100 messages per page and supports showing all messages up to 5,000 at once, with search, date filters, and review status. Messages are not deleted or capped at 5,000 by the admin configuration.
+
+Projects added or edited in **Projects** appear on the portfolio. The initial seed command only adds missing default entries and does not overwrite or delete projects you have edited or added. The public project list is fetched through all bounded API pages, so projects beyond the first 100 are not dropped from the homepage.
 
 The contact inbox supports well over 200,000 records. To load a clearly marked demo dataset for performance testing, run `py manage.py seed_demo_messages --count 200001`. Do not run this for normal use unless you specifically want demo rows in the inbox.
 

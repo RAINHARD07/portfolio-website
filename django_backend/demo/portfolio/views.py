@@ -5,9 +5,10 @@ from datetime import datetime
 from django.core.cache import cache
 from django.db import transaction
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import FileResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
+from django.urls import reverse
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
@@ -90,13 +91,26 @@ class ProfileView(View):
         if profile is None:
             return JsonResponse({"data": {}})
         return JsonResponse({"data": {
-            "cvUrl": profile.cv_file.url if profile.cv_file else "/static/site/cv.pdf",
+            "cvUrl": reverse("cv") if profile.cv_file else "/static/site/cv.pdf",
             "instagramUrl": profile.instagram_url,
             "githubUrl": profile.github_url,
             "linkedinUrl": profile.linkedin_url,
             "xUrl": profile.x_url,
             "facebookUrl": profile.facebook_url,
         }})
+
+
+class CVFileView(View):
+    def get(self, request):
+        profile = SiteProfile.objects.only("cv_file").first()
+        if profile is None or not profile.cv_file:
+            return HttpResponseNotFound("No uploaded CV is available.")
+        return FileResponse(
+            profile.cv_file.open("rb"),
+            as_attachment=True,
+            filename="Rainhard-Boah-Asante-CV.pdf",
+            content_type="application/pdf",
+        )
 
 
 class ProjectListView(View):

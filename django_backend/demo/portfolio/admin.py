@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
 
 from .models import BlogPost, ContactSubmission, HighVolumeLogEntry, Project, SiteProfile, Skill
 
@@ -16,7 +18,9 @@ class SiteProfileAdmin(admin.ModelAdmin):
 
     @admin.display(description="CV")
     def cv_link(self, obj):
-        return "Uploaded" if obj.cv_file else "Using default CV"
+        if obj.cv_file:
+            return format_html('<a href="{}">Download uploaded CV</a>', reverse("cv"))
+        return "Using default CV"
 
 
 @admin.register(Project)
@@ -35,7 +39,9 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
     list_filter = ("is_reviewed", "submitted_at")
     search_fields = ("name", "email", "subject", "message_body", "ip_address")
     date_hierarchy = "submitted_at"
-    list_per_page = 50
+    list_per_page = 100
+    list_max_show_all = 5000
+    show_full_result_count = False
 
     @admin.display(description="Message")
     def message_preview(self, obj):
