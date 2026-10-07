@@ -4,7 +4,7 @@ This is the authoritative replacement for the previous Express API. Django serve
 
 ## Local setup
 
-Prerequisites: Python 3.12+, PostgreSQL 14+ for production-style use.
+Prerequisites: Python 3.12+. SQLite is used by default; PostgreSQL support remains optional.
 
 ```powershell
 cd django_backend
@@ -37,13 +37,13 @@ Projects added or edited in **Projects** appear on the portfolio. The initial se
 
 The contact inbox supports well over 200,000 records. To load a clearly marked demo dataset for performance testing, run `py manage.py seed_demo_messages --count 200001`. Do not run this for normal use unless you specifically want demo rows in the inbox.
 
-For a quick SQLite-only local run, leave `DATABASE_URL` empty. Use PostgreSQL for production and large-volume workloads. Run `py manage.py collectstatic --noinput` before deployment and serve with Gunicorn behind HTTPS.
+For local development, leave `DATABASE_URL` empty to use SQLite. Render uses SQLite at `/var/data/db.sqlite3` on a persistent disk and stores uploaded CVs under `/var/data/media`. This is suitable for a single web instance at the current portfolio scale; SQLite allows only limited concurrent writes, so keep one instance and back up the disk.
 
 ## Render deployment
 
-The repository includes `render.yaml` for the full Django deployment. In Render, choose **New > Blueprint**, connect `RAINHARD07/portfolio-website`, and apply the blueprint. It creates the `asanterainhardboah` web service and a PostgreSQL database, then runs migrations and collects static files during each build.
+The repository includes `render.yaml` for the full Django deployment. In Render, choose **New > Blueprint**, connect `RAINHARD07/portfolio-website`, and apply the blueprint. It creates the `asanterainhardboah` web service with SQLite and uploaded CVs on a persistent disk, then runs migrations, seeds only missing defaults, and collects static files during each build. A persistent disk requires a paid Render instance; this setup does not create or use PostgreSQL.
 
-Render's free web service filesystem is temporary. The CV upload works during a running instance, but uploaded files should use persistent object storage or a paid persistent disk before production use.
+Render's free web service filesystem is temporary. The persistent disk is required to keep the SQLite database, contact messages, and uploaded CVs through restarts and deploys.
 
 ## API
 
@@ -58,7 +58,7 @@ All list reads are bounded. Projects and blog posts use keyset cursors based on 
 
 ## Deployment
 
-Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_SECURE_SSL_REDIRECT=true`, and a managed PostgreSQL `DATABASE_URL`. Run migrations and collect static files during release, then start:
+Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_SECURE_SSL_REDIRECT=true`, `DATABASE_URL=sqlite:////var/data/db.sqlite3`, and `MEDIA_ROOT=/var/data/media`. Keep a single web instance and back up the persistent disk. Run migrations and collect static files during release, then start:
 
 ```powershell
 gunicorn portfolio_project.wsgi:application --bind 0.0.0.0:$env:PORT

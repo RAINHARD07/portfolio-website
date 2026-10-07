@@ -7,7 +7,7 @@ This repository contains the responsive portfolio frontend and its Django applic
 - `index.html` — static portfolio front end
 - `styles.css` — site styling and responsive layout
 - `script.js` — interactive behavior and form handling
-- `django_backend/` — Django application, PostgreSQL models, API, migrations, admin, and deployment entry points
+- `django_backend/` — Django application, SQLite/PostgreSQL-compatible models, API, migrations, admin, and deployment entry points
 - `backend/` — legacy Express + Prisma API retained for reference and data migration only
 
 ## Local development
@@ -48,7 +48,7 @@ The portfolio front end is a static site and can be deployed to GitHub Pages, Ne
 
 ## Django deployment
 
-Deploy `django_backend/` as a Python web service with managed PostgreSQL. Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, and `DATABASE_URL` in the provider's secret configuration. Never commit `.env`.
+Deploy `django_backend/` as a Python web service. The Render Blueprint uses SQLite on a persistent disk at `/var/data/db.sqlite3` and stores uploaded media on the same disk. This keeps the database and CV uploads across deploys without PostgreSQL; keep one web instance because SQLite is intended for a single writer. Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, `DATABASE_URL=sqlite:////var/data/db.sqlite3`, and `MEDIA_ROOT=/var/data/media`. Never commit `.env`.
 
 1. Install dependencies and migrate:
 
@@ -69,7 +69,7 @@ The service exposes a health check at `GET /health` and admin at `/admin/`.
 
 ## Production notes
 
-- Use a strong random `DJANGO_SECRET_KEY` and a managed PostgreSQL service.
+- Use a strong random `DJANGO_SECRET_KEY`; back up the persistent SQLite disk and avoid multiple app instances writing to the same database.
 - Create an admin with `python manage.py createsuperuser`; never commit credentials.
 - Run `python manage.py check --deploy` before release.
 - Put a durable queue in front of analytics ingestion if traffic grows beyond synchronous database writes.
