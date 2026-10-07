@@ -29,21 +29,21 @@ Open `http://127.0.0.1:8000/` (HTTP, not HTTPS). The Django view serves the exis
 5. Open **Contact submissions** to read messages sent from the website. Use the `is reviewed` checkbox after handling a message.
 6. Use **Projects**, **Skills**, and **Blog posts** to change the portfolio content without editing GitHub files.
 
-Upload a replacement CV from **Site profiles** in Django admin. The CV is served from the Django app so it works in production as well as locally. Render mounts a persistent disk at `/var/data` for uploads; without that disk, uploaded files would be lost on redeploy. Keep database and uploaded-file backups enabled.
+Upload a replacement CV from **Site profiles** in Django admin. The CV is served from the Django app so it works in production as well as locally. On Render Free, uploaded files use temporary local storage and can disappear on restart, spin-down, or deploy.
 
-Contact submissions are stored in the database and remain available in **Contact submissions**. The inbox shows 100 messages per page and supports showing all messages up to 5,000 at once, with search, date filters, and review status. Messages are not deleted or capped at 5,000 by the admin configuration.
+Contact submissions are stored in SQLite and shown in **Contact submissions**. The inbox shows 100 messages per page and supports showing all messages up to 5,000 at once, with search, date filters, and review status. Messages are not capped at 5,000, but on Render Free the SQLite file is temporary and messages can disappear on restart, spin-down, or deploy.
 
 Projects added or edited in **Projects** appear on the portfolio. The initial seed command only adds missing default entries and does not overwrite or delete projects you have edited or added. The public project list is fetched through all bounded API pages, so projects beyond the first 100 are not dropped from the homepage.
 
 The contact inbox supports well over 200,000 records. To load a clearly marked demo dataset for performance testing, run `py manage.py seed_demo_messages --count 200001`. Do not run this for normal use unless you specifically want demo rows in the inbox.
 
-For local development, leave `DATABASE_URL` empty to use SQLite. Render uses SQLite at `/var/data/db.sqlite3` on a persistent disk and stores uploaded CVs under `/var/data/media`. This is suitable for a single web instance at the current portfolio scale; SQLite allows only limited concurrent writes, so keep one instance and back up the disk.
+For local development, leave `DATABASE_URL` empty to use SQLite. Render Free also uses SQLite's default local file, but its filesystem is temporary. This mode is for trying the hosted admin and inbox only; use durable storage before relying on messages or uploaded CVs.
 
 ## Render deployment
 
-The repository includes `render.yaml` for the full Django deployment. In Render, choose **New > Blueprint**, connect `RAINHARD07/portfolio-website`, and apply the blueprint. It creates the `asanterainhardboah` web service with SQLite and uploaded CVs on a persistent disk, then runs migrations, seeds only missing defaults, and collects static files during each build. A persistent disk requires a paid Render instance; this setup does not create or use PostgreSQL.
+The repository includes `render.yaml` for the Django web service. The Free configuration uses SQLite and local media; it does not create PostgreSQL or attach a disk. Render Free's filesystem is temporary, so messages and uploaded CVs may be lost when the service restarts, spins down, or deploys.
 
-Render's free web service filesystem is temporary. The persistent disk is required to keep the SQLite database, contact messages, and uploaded CVs through restarts and deploys.
+To keep messages and CV uploads permanently, upgrade the Render service to a plan that supports a persistent disk, or move to a host with persistent SQLite storage.
 
 ## API
 
@@ -58,10 +58,10 @@ All list reads are bounded. Projects and blog posts use keyset cursors based on 
 
 ## Deployment
 
-Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_SECURE_SSL_REDIRECT=true`, `DATABASE_URL=sqlite:////var/data/db.sqlite3`, and `MEDIA_ROOT=/var/data/media`. Keep a single web instance and back up the persistent disk. Run migrations and collect static files during release, then start:
+Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, exact HTTPS `DJANGO_CSRF_TRUSTED_ORIGINS`, and `DJANGO_SECURE_SSL_REDIRECT=true`. Leave `DATABASE_URL` unset to use SQLite's default local file. Run migrations and collect static files during build, then start:
 
 ```powershell
 gunicorn portfolio_project.wsgi:application --bind 0.0.0.0:$env:PORT
 ```
 
-Do not commit `.env`, use a provider-managed secret, enable PostgreSQL backups, and configure a reverse proxy/platform HTTPS certificate.
+Do not commit `.env`, use a provider-managed secret, and configure the platform HTTPS certificate. Do not rely on Render Free local files for contact-message or CV persistence.
