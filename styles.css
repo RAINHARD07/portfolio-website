@@ -84,3 +84,23 @@ button { cursor: pointer; }
 .contact-details a[href^="mailto:"] { border-color: color-mix(in srgb, var(--navy) 48%, transparent); font-weight: 700; }
 @media (max-width: 800px) { .container { width: min(100% - 32px, 620px); } .nav { min-height: 72px; } .menu-toggle { display: grid; gap: 4px; padding: 8px 0 8px 8px; } .menu-toggle span { display: block; width: 24px; height: 1px; background: var(--ink); transition: transform .2s; } .menu-toggle[aria-expanded='true'] span:first-child { transform: translateY(5px) rotate(45deg); } .menu-toggle[aria-expanded='true'] span:nth-child(2) { opacity: 0; } .menu-toggle[aria-expanded='true'] span:last-of-type { transform: translateY(-5px) rotate(-45deg); } .nav-menu { position: absolute; top: 72px; right: 16px; left: 16px; display: grid; gap: 0; padding: 14px; border: 1px solid var(--line); background: var(--paper); box-shadow: 8px 8px 0 var(--copper); transform: translateY(-12px); opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s, visibility .2s; } .nav-menu.open { opacity: 1; visibility: visible; transform: none; } .nav-menu > a:not(.nav-cta) { padding: 12px 4px; border-bottom: 1px solid var(--line); } .nav-cta { margin-top: 13px; text-align: center; } .theme-toggle { position: absolute; right: 10px; top: 14px; } .nav-menu > a.nav-cta { margin-right: 42px; } .hero { grid-template-columns: 1fr; min-height: auto; gap: 65px; padding-top: 60px; padding-bottom: 75px; } .hero h1 { font-size: clamp(48px, 15vw, 75px); } .hero-proof { margin-top: 55px; } .hero-visual { min-height: 430px; } .network-map { height: 270px; } .node-a { left: 8%; } .node-b { right: 8%; } .section { padding-top: 85px; padding-bottom: 85px; } .about-content, .experience-layout, .education-layout, .contact-layout { grid-template-columns: 1fr; gap: 45px; padding-top: 45px; } .section-heading { margin: 45px 0; } .skills-grid { grid-template-columns: 1fr; gap: 0; } .skill-item, .skill-item:nth-child(4) { grid-column: auto; } .projects-head { align-items: start; flex-direction: column; margin: 45px 0; } .filter-tabs { justify-content: flex-start; } .project-grid { grid-template-columns: 1fr; } .project-featured { grid-row: auto; min-height: 500px; } .project-card { min-height: 400px; } .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 15px; } .stats-grid strong { font-size: 41px; } .contact-section { padding: 85px 0; } .footer-main, .footer-bottom { align-items: flex-start; flex-direction: column; } .footer-bottom { gap: 10px; } .back-top { align-self: flex-end; margin-top: -32px; } }
 @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
+.nav-cta span, .hero-actions .button span, .text-link span, .arrow-link span, .project-link span, .contact-socials span, .contact-form .button span { display: none; }
+.hero-visual, .projects-section, .site-footer { color: #f5f3ed; background-color: #18343c; }
+.hero-visual .field-avatar, .hero-visual .visual-index, .hero-visual .visual-note strong, .hero-visual .field-summary strong, .hero-visual .field-metrics strong { color: #e8b29c; }
+.projects-section .section-label, .projects-section h2, .projects-section .project-card h3 { color: #f5f3ed; }
+.projects-section h2 em, .projects-section .project-meta { color: #e8b29c; }
+.projects-section .filter.active, .projects-section .filter:hover { color: #f5f3ed; }
+.projects-section .project-featured { color: #18343c; background-color: #bd5d3a; }
+.projects-section .project-featured .project-meta, .projects-section .project-featured h3, .projects-section .project-featured .case-study, .projects-section .project-featured .project-link, .projects-section .project-featured .case-study b { color: #18343c; }
+.stats-band, .contact-section { color: #18343c; }
+.stats-band .stats-grid strong, .contact-section h2 { color: #18343c; }
+.contact-section h2 em { color: #f5f3ed; }
+.projects-section .case-study b, .projects-section .project-link { color: #e8b29c; }
+.contact-section .button-light { color: #18343c; background-color: #f5f3ed; border-color: #18343c; }
+.contact-section .contact-details a { border-color: #18343c66; background-color: #f5f3ed22; }
+.contact-section .contact-details a span { color: #18343c; }
+.contact-section input, .contact-section textarea { color: #18343c; border-color: #18343c66; }
+.contact-section input:focus, .contact-section textarea:focus { border-color: #18343c; box-shadow: 0 1px 0 #18343c; }
+.site-footer .footer-bottom { color: #c5d0cc; }
+.site-footer .footer-bottom a { color: #f5f3ed; }
+.site-footer .footer-bottom a:hover { color: #e8b29c; }
